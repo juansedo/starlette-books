@@ -2,9 +2,17 @@ from starlette.requests import Request
 from starlette.responses import JSONResponse
 from starlette.routing import Mount, Route
 
+from src.database.models.books import BookRepository
+
 
 def getAll(request: Request):
-    return JSONResponse(content={"message": "Hello, world!"})
+    books = BookRepository.getAll()
+    response = {
+        "message": "Books retrieved",
+        "books": books,
+        "count": len(books)
+    }
+    return JSONResponse(content=response)
 
 def getOne(request: Request):
     id = request.path_params.get('id')
