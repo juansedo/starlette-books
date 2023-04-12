@@ -8,18 +8,26 @@ from src.database.models.books import BookRepository
 def getAll(request: Request):
     books = BookRepository.getAll()
     response = {
+        "data": books,
+        "count": len(books),
         "message": "Books retrieved",
-        "books": books,
-        "count": len(books)
     }
     return JSONResponse(content=response)
 
 def getOne(request: Request):
     id = request.path_params.get('id')
-    return JSONResponse(content={"message": f"Book {id}"})
+    book = BookRepository.getOne(id)
+    return JSONResponse(content=book)
 
-def createOne(request: Request):
-    return JSONResponse(content={"message": "Book created!"})
+async def createOne(request: Request):
+    try:
+        body = await request.json()
+        BookRepository.createOne(body)
+        return JSONResponse(content={"message": "Book created!"})
+    except KeyError as e:
+        return JSONResponse(status_code=400, content={"message": "Missing parameter: " + str(e)})
+    except Exception as e:
+        return JSONResponse(status_code=400, content={"message": "Book not created!"})
 
 routes = [
     Mount('/books', routes=[
