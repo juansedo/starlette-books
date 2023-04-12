@@ -7,3 +7,5 @@ dist/
 .venv
 env/
 venv/
+
+database.db
