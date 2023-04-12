@@ -1,5 +1,5 @@
 from starlette.requests import Request
-from starlette.responses import JSONResponse
+from starlette.responses import JSONResponse, Response
 from starlette.routing import Mount, Route
 
 from src.database.models.books import BookRepository
@@ -15,15 +15,18 @@ def getAll(request: Request):
     return JSONResponse(content=response)
 
 def getOne(request: Request):
-    id = request.path_params.get('id')
-    book = BookRepository.getOne(id)
-    return JSONResponse(content=book)
+    try:
+        id = request.path_params.get('id')
+        book = BookRepository.getOne(id)
+        return JSONResponse(content=book)
+    except:
+        return Response(status_code=400)
 
 async def createOne(request: Request):
     try:
         body = await request.json()
         BookRepository.createOne(body)
-        return JSONResponse(content={"message": "Book created!"})
+        return JSONResponse(status_code=201, content={"message": "Book created!"})
     except KeyError as e:
         return JSONResponse(status_code=400, content={"message": "Missing parameter: " + str(e)})
     except Exception as e:

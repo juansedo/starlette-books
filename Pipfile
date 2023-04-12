@@ -7,9 +7,16 @@ name = "pypi"
 starlette = "*"
 uvicorn = "*"
 sqlalchemy = "*"
+pytest = "*"
+httpx = "*"
 
 [dev-packages]
 
 [requires]
 python_version = "3.8"
 python_full_version = "3.8.10"
+
+[scripts]
+test = "pytest --capture=no"
+db_up = "python3 up.py"
+db_down = "python3 down.py"

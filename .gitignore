@@ -8,4 +8,4 @@ dist/
 env/
 venv/
 
-database.db
+*database.db
